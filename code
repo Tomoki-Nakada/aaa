@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>航空機情報表示</title>
+</head>
+<body>
+  <h1>飛行中の航空機一覧</h1>
+  <button onclick="loadPlanes()">更新</button>
+  <ul id="planeList"></ul>
+
+  <script>
+    async function loadPlanes() {
+      const url = "https://opensky-network.org/api/states/all";
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const list = document.getElementById("planeList");
+      list.innerHTML = "";
+
+      data.states.forEach(plane => {
+        const altitude = plane[7];
+        const originCountry = plane[2];
+        const callsign = plane[1]?.trim();
+
+        if (callsign && altitude && altitude > 10000 && originCountry === "Japan"){ 
+          const li = document.createElement("li");
+          li.textContent ="callsign: " + callsign + " / 高度: " + altitude + "m";;
+          list.appendChild(li);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
+いったん保存のために送っておくね
